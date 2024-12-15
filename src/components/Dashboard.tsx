@@ -40,8 +40,8 @@ export const Dashboard = () => {
 
       // First, get the current file content
       const { data: fileData } = await octokit.rest.repos.getContent({
-        owner: 'your-username',
-        repo: 'your-repo',
+        owner: 'GGSaverApiHg',
+        repo: 'user-management',
         path: 'users.json',
       });
 
@@ -61,8 +61,8 @@ export const Dashboard = () => {
 
       // Update the file in GitHub
       await octokit.rest.repos.createOrUpdateFileContents({
-        owner: 'your-username',
-        repo: 'your-repo',
+        owner: 'GGSaverApiHg',
+        repo: 'user-management',
         path: 'users.json',
         message: `Reset HWID for user ${updatedUser.username}`,
         content: Buffer.from(JSON.stringify(updatedUsers, null, 2)).toString('base64'),
@@ -126,7 +126,7 @@ export const Dashboard = () => {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Username</span>
-              <span>{user.username}</span>
+              <span>{user?.username}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Password</span>
@@ -138,7 +138,7 @@ export const Dashboard = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Current HWID</span>
-              <span className="font-mono">{user.hwid || "Not Set"}</span>
+              <span className="font-mono">{user?.hwid || "Not Set"}</span>
             </div>
           </div>
         </CardContent>
@@ -152,11 +152,11 @@ export const Dashboard = () => {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span>Package</span>
-              <span>{user.subscription}</span>
+              <span>{user?.subscription}</span>
             </div>
             <div className="flex justify-between items-center">
               <span>Expiration Date</span>
-              <span>{user.expireDate}</span>
+              <span>{user?.expireDate}</span>
             </div>
           </div>
         </CardContent>
@@ -179,11 +179,11 @@ export const Dashboard = () => {
               <Button 
                 variant="default"
                 onClick={handleHWIDReset}
-                disabled={user.hwidResets >= MAX_RESETS}
+                disabled={user?.hwidResets >= MAX_RESETS}
                 className="bg-cyan-500 hover:bg-cyan-600"
               >
                 <RotateCw className="mr-2 h-4 w-4" />
-                Reset Device ID ({user.hwidResets || 0}/{MAX_RESETS})
+                Reset Device ID ({user?.hwidResets || 0}/{MAX_RESETS})
               </Button>
             </div>
           </div>

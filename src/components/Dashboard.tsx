@@ -39,7 +39,7 @@ export const Dashboard = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Status</span>
-              <Badge variant="success">Active</Badge>
+              <Badge variant="default">Active</Badge>
             </div>
           </div>
         </CardContent>

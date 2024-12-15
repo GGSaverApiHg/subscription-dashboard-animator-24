@@ -1,3 +1,5 @@
+import { Logo } from "./Logo";
+
 export const Footer = () => {
   return (
     <footer className="py-6 md:px-8 md:py-0">

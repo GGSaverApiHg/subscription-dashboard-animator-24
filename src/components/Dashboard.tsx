@@ -83,6 +83,24 @@ export const Dashboard = () => {
       </Card>
 
       <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>Subscription Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span>Package</span>
+              <span>{user.subscription}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span>Expiration Date</span>
+              <span>{user.expireDate}</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
         <CardHeader className="bg-secondary">
           <CardTitle className="text-center">Reset Device ID</CardTitle>
         </CardHeader>
@@ -105,24 +123,6 @@ export const Dashboard = () => {
                 <RotateCw className="mr-2 h-4 w-4" />
                 Reset Device ID ({user.hwidResets || 0}/{MAX_RESETS})
               </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Subscription Status</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span>Package</span>
-              <span>{user.subscription}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span>Expiration Date</span>
-              <span>{user.expireDate}</span>
             </div>
           </div>
         </CardContent>

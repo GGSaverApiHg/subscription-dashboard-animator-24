@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { RotateCw, Shield } from "lucide-react";
+import { Octokit } from "octokit";
 
 interface User {
   username: string;
@@ -24,7 +25,6 @@ export const Dashboard = () => {
     const userData = localStorage.getItem("user");
     if (userData) {
       const parsedUser = JSON.parse(userData);
-      // Initialize HWID resets if not present
       if (typeof parsedUser.hwidResets === 'undefined') {
         parsedUser.hwidResets = 0;
       }
@@ -32,7 +32,46 @@ export const Dashboard = () => {
     }
   }, []);
 
-  const handleHWIDReset = () => {
+  const updateGithubRepo = async (updatedUser: User) => {
+    try {
+      const octokit = new Octokit({
+        auth: process.env.GITHUB_ACCESS_TOKEN
+      });
+
+      // First, get the current file content
+      const { data: fileData } = await octokit.rest.repos.getContent({
+        owner: 'your-username',
+        repo: 'your-repo',
+        path: 'users.json',
+      });
+
+      // Decode the content
+      const content = Buffer.from(fileData.content, 'base64').toString();
+      const users = JSON.parse(content);
+
+      // Update the specific user's HWID
+      const updatedUsers = users.map((u: User) => 
+        u.username === updatedUser.username ? { ...u, hwid: "" } : u
+      );
+
+      // Update the file in GitHub
+      await octokit.rest.repos.createOrUpdateFileContents({
+        owner: 'your-username',
+        repo: 'your-repo',
+        path: 'users.json',
+        message: `Reset HWID for user ${updatedUser.username}`,
+        content: Buffer.from(JSON.stringify(updatedUsers, null, 2)).toString('base64'),
+        sha: fileData.sha
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Error updating GitHub:', error);
+      return false;
+    }
+  };
+
+  const handleHWIDReset = async () => {
     if (!user) return;
 
     if (user.hwidResets >= MAX_RESETS) {
@@ -46,17 +85,28 @@ export const Dashboard = () => {
 
     const updatedUser = {
       ...user,
-      hwid: "", // Clear the HWID
+      hwid: "",
       hwidResets: (user.hwidResets || 0) + 1
     };
 
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    setUser(updatedUser);
+    // Update GitHub repository
+    const githubUpdateSuccess = await updateGithubRepo(updatedUser);
+    
+    if (githubUpdateSuccess) {
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
 
-    toast({
-      title: "HWID Reset Successful",
-      description: `HWID has been cleared (Reset count: ${updatedUser.hwidResets}/${MAX_RESETS})`,
-    });
+      toast({
+        title: "HWID Reset Successful",
+        description: `HWID has been cleared (Reset count: ${updatedUser.hwidResets}/${MAX_RESETS})`,
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Reset failed",
+        description: "Failed to update HWID. Please try again later."
+      });
+    }
   };
 
   if (!user) return null;

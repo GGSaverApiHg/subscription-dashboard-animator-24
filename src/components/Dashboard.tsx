@@ -21,6 +21,9 @@ export const Dashboard = () => {
   const { toast } = useToast();
   const MAX_RESETS = 15;
   const GITHUB_TOKEN = "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";
+  const REPO_OWNER = "GGSaverApiHg";
+  const REPO_NAME = "user-management";
+  const FILE_PATH = "users.json";
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -41,18 +44,18 @@ export const Dashboard = () => {
 
       // First, get the current file content
       const { data: fileData } = await octokit.rest.repos.getContent({
-        owner: 'GGSaverApiHg',
-        repo: 'user-management',
-        path: 'users.json',
+        owner: REPO_OWNER,
+        repo: REPO_NAME,
+        path: FILE_PATH,
       });
 
-      // Check if fileData is a single file (not an array)
+      // Type guard to ensure fileData is a single file object
       if (Array.isArray(fileData) || !('content' in fileData)) {
         throw new Error('Invalid response format');
       }
 
       // Decode the content
-      const content = Buffer.from(fileData.content, 'base64').toString();
+      const content = atob(fileData.content);
       const users = JSON.parse(content);
 
       // Update the specific user's HWID
@@ -62,11 +65,11 @@ export const Dashboard = () => {
 
       // Update the file in GitHub
       await octokit.rest.repos.createOrUpdateFileContents({
-        owner: 'GGSaverApiHg',
-        repo: 'user-management',
-        path: 'users.json',
+        owner: REPO_OWNER,
+        repo: REPO_NAME,
+        path: FILE_PATH,
         message: `Reset HWID for user ${updatedUser.username}`,
-        content: Buffer.from(JSON.stringify(updatedUsers, null, 2)).toString('base64'),
+        content: btoa(JSON.stringify(updatedUsers, null, 2)),
         sha: fileData.sha
       });
 

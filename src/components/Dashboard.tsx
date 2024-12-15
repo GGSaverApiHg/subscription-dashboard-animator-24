@@ -20,6 +20,7 @@ export const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const { toast } = useToast();
   const MAX_RESETS = 15;
+  const GITHUB_TOKEN = "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";
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -35,7 +36,7 @@ export const Dashboard = () => {
   const updateGithubRepo = async (updatedUser: User) => {
     try {
       const octokit = new Octokit({
-        auth: process.env.GITHUB_ACCESS_TOKEN
+        auth: GITHUB_TOKEN
       });
 
       // First, get the current file content

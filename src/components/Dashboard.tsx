@@ -11,7 +11,8 @@ interface User {
   subscription: string;
   expireDate: string;
   hwidResets?: number;
-  hwid?: string;
+  hwid: string;
+  key: string;
 }
 
 export const Dashboard = () => {
@@ -23,22 +24,13 @@ export const Dashboard = () => {
     const userData = localStorage.getItem("user");
     if (userData) {
       const parsedUser = JSON.parse(userData);
-      // Initialize HWID resets and HWID if not present
+      // Initialize HWID resets if not present
       if (typeof parsedUser.hwidResets === 'undefined') {
         parsedUser.hwidResets = 0;
-      }
-      if (typeof parsedUser.hwid === 'undefined') {
-        parsedUser.hwid = generateRandomHWID();
       }
       setUser(parsedUser);
     }
   }, []);
-
-  const generateRandomHWID = () => {
-    // Generate a random HWID string (for demonstration)
-    return Math.random().toString(36).substring(2, 15) + 
-           Math.random().toString(36).substring(2, 15);
-  };
 
   const handleHWIDReset = () => {
     if (!user) return;
@@ -52,10 +44,9 @@ export const Dashboard = () => {
       return;
     }
 
-    const newHWID = generateRandomHWID();
     const updatedUser = {
       ...user,
-      hwid: newHWID,
+      hwid: "", // Clear the HWID
       hwidResets: (user.hwidResets || 0) + 1
     };
 
@@ -64,7 +55,7 @@ export const Dashboard = () => {
 
     toast({
       title: "HWID Reset Successful",
-      description: `New HWID: ${newHWID.substring(0, 8)}... (Reset count: ${updatedUser.hwidResets}/${MAX_RESETS})`,
+      description: `HWID has been cleared (Reset count: ${updatedUser.hwidResets}/${MAX_RESETS})`,
     });
   };
 
@@ -92,7 +83,7 @@ export const Dashboard = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Current HWID</span>
-              <span className="font-mono">{user.hwid?.substring(0, 8)}...</span>
+              <span className="font-mono">{user.hwid || "Not Set"}</span>
             </div>
           </div>
         </CardContent>

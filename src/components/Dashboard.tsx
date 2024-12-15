@@ -45,6 +45,11 @@ export const Dashboard = () => {
         path: 'users.json',
       });
 
+      // Check if fileData is a single file (not an array)
+      if (Array.isArray(fileData) || !('content' in fileData)) {
+        throw new Error('Invalid response format');
+      }
+
       // Decode the content
       const content = Buffer.from(fileData.content, 'base64').toString();
       const users = JSON.parse(content);

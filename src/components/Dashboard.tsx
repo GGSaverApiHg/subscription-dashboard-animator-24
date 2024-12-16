@@ -4,6 +4,7 @@ import { Octokit } from "octokit";
 import { AccountInfo } from "./dashboard/AccountInfo";
 import { HWIDReset } from "./dashboard/HWIDReset";
 import { SubscriptionStatus } from "./dashboard/SubscriptionStatus";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   username: string;
@@ -18,16 +19,28 @@ interface User {
 export const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
   const MAX_RESETS = 15;
-  const GITHUB_TOKEN = "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";
   const REPO_OWNER = "GGSaverApiHg";
   const REPO_NAME = "user-management";
   const FILE_PATH = "users.json";
 
   const fetchUserData = async (username: string) => {
+    const githubToken = localStorage.getItem("github_token");
+    
+    if (!githubToken) {
+      toast({
+        variant: "destructive",
+        title: "Authentication Error",
+        description: "Please login again"
+      });
+      navigate("/");
+      return;
+    }
+
     try {
       const octokit = new Octokit({
-        auth: GITHUB_TOKEN
+        auth: githubToken
       });
 
       const { data: fileData } = await octokit.rest.repos.getContent({
@@ -45,12 +58,17 @@ export const Dashboard = () => {
       const githubUser = users.find((u: User) => u.username === username);
       
       if (githubUser) {
-        // Update local storage with the latest data from GitHub
         localStorage.setItem("user", JSON.stringify(githubUser));
         setUser(githubUser);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to fetch user data. Please login again."
+      });
+      navigate("/");
     }
   };
 
@@ -58,15 +76,26 @@ export const Dashboard = () => {
     const userData = localStorage.getItem("user");
     if (userData) {
       const parsedUser = JSON.parse(userData);
-      // Always fetch the latest data from GitHub when component mounts
       fetchUserData(parsedUser.username);
     }
   }, []);
 
   const updateGithubRepo = async (updatedUser: User) => {
+    const githubToken = localStorage.getItem("github_token");
+    
+    if (!githubToken) {
+      toast({
+        variant: "destructive",
+        title: "Authentication Error",
+        description: "Please login again"
+      });
+      navigate("/");
+      return;
+    }
+
     try {
       const octokit = new Octokit({
-        auth: GITHUB_TOKEN
+        auth: githubToken
       });
 
       const { data: fileData } = await octokit.rest.repos.getContent({
@@ -107,7 +136,6 @@ export const Dashboard = () => {
   const handleHWIDReset = async () => {
     if (!user) return;
 
-    // Get the latest user data before proceeding
     await fetchUserData(user.username);
 
     if (!user || user.hwidResets >= MAX_RESETS) {
@@ -122,7 +150,6 @@ export const Dashboard = () => {
     const githubUpdateSuccess = await updateGithubRepo(user);
     
     if (githubUpdateSuccess) {
-      // Fetch the latest data after successful update
       await fetchUserData(user.username);
 
       toast({

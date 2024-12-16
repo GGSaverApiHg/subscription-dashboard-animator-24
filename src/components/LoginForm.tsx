@@ -4,23 +4,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Logo } from "./Logo";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [githubToken, setGithubToken] = useState(localStorage.getItem("github_token") || "");
   const navigate = useNavigate();
   const { toast } = useToast();
-  const GITHUB_TOKEN = "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";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!githubToken) {
+      toast({
+        variant: "destructive",
+        title: "GitHub Token Required",
+        description: "Please enter a valid GitHub token"
+      });
+      return;
+    }
+
     try {
       const response = await fetch(
         "https://api.github.com/repos/GGSaverApiHg/user-management/contents/users.json",
         {
           headers: {
-            Authorization: `Bearer ${GITHUB_TOKEN}`,
+            Authorization: `Bearer ${githubToken}`,
           },
         }
       );
@@ -35,6 +45,7 @@ export const LoginForm = () => {
       const user = users.find((u: any) => u.username === username && u.password === password);
       if (user) {
         localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("github_token", githubToken);
         navigate("/dashboard");
       } else {
         toast({
@@ -48,7 +59,7 @@ export const LoginForm = () => {
       toast({
         variant: "destructive",
         title: "Login failed",
-        description: "An error occurred during login"
+        description: "Please check your GitHub token and try again"
       });
     }
   };
@@ -68,6 +79,12 @@ export const LoginForm = () => {
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
+              <Input
+                type="text"
+                placeholder="GitHub Token"
+                value={githubToken}
+                onChange={(e) => setGithubToken(e.target.value)}
+              />
               <Input
                 type="text"
                 placeholder="Username"

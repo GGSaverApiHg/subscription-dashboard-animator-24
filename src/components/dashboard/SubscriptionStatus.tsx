@@ -36,8 +36,8 @@ export const SubscriptionStatus = ({ user }: SubscriptionStatusProps) => {
   const isFullSubscription = getSubscriptionStatus(user.subscription);
 
   return (
-    <Card className="bg-[#1A1F2C] border-gray-800">
-      <CardHeader className="bg-secondary">
+    <Card>
+      <CardHeader>
         <CardTitle className="text-center">Subscription Status</CardTitle>
       </CardHeader>
       <CardContent>
@@ -45,12 +45,12 @@ export const SubscriptionStatus = ({ user }: SubscriptionStatusProps) => {
           {subscriptions.map((sub) => (
             <div 
               key={sub.name}
-              className="flex justify-between items-center border-l-4 border-green-500 pl-4"
+              className="flex justify-between items-center border-l-4 pl-4"
             >
-              <span className="text-xl text-white">{sub.name}</span>
+              <span className="text-xl">{sub.name}</span>
               <div className="flex items-center gap-8">
                 <SubscriptionIndicator isActive={sub.active} />
-                <span className="text-xl text-white">
+                <span className="text-xl">
                   {user.expireDate || "Expired date"}
                 </span>
               </div>

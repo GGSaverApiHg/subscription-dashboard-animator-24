@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Logo } from "./Logo";
+import { useToast } from "@/components/ui/use-toast";
 
 export const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const GITHUB_TOKEN = "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";
+  const { toast } = useToast();
+  const GITHUB_TOKEN = "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";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +24,11 @@ export const LoginForm = () => {
           },
         }
       );
+      
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
       const data = await response.json();
       const users = JSON.parse(atob(data.content));
       
@@ -29,9 +36,20 @@ export const LoginForm = () => {
       if (user) {
         localStorage.setItem("user", JSON.stringify(user));
         navigate("/dashboard");
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Login failed",
+          description: "Invalid username or password"
+        });
       }
     } catch (error) {
       console.error("Login failed:", error);
+      toast({
+        variant: "destructive",
+        title: "Login failed",
+        description: "An error occurred during login"
+      });
     }
   };
 

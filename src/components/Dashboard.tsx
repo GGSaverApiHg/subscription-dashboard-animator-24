@@ -19,7 +19,7 @@ export const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const { toast } = useToast();
   const MAX_RESETS = 15;
-  const GITHUB_TOKEN = "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";
+  const GITHUB_TOKEN = "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";
   const REPO_OWNER = "GGSaverApiHg";
   const REPO_NAME = "user-management";
   const FILE_PATH = "users.json";

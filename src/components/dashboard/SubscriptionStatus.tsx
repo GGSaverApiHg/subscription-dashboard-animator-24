@@ -47,10 +47,10 @@ export const SubscriptionStatus = ({ user }: SubscriptionStatusProps) => {
               key={sub.name}
               className="flex justify-between items-center border-l-4 pl-4"
             >
-              <span className="text-xl text-muted-foreground">{sub.name}</span>
+              <span className="text-sm text-muted-foreground">{sub.name}</span>
               <div className="flex items-center gap-8">
                 <SubscriptionIndicator isActive={sub.active} />
-                <span className="text-xl text-muted-foreground">
+                <span className="text-sm text-muted-foreground">
                   {user.expireDate || "Expired date"}
                 </span>
               </div>

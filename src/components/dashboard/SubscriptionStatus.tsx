@@ -37,7 +37,7 @@ export const SubscriptionStatus = ({ user }: SubscriptionStatusProps) => {
   const isFullSubscription = getSubscriptionStatus(user.subscription);
 
   return (
-    <Card className="bg-[#0f1729] border-gray-800">
+    <Card className="bg-[#1A1F2C] border-gray-800">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-white">Subscription Status</CardTitle>
       </CardHeader>

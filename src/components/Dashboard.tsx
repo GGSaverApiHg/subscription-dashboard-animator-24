@@ -3,6 +3,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Octokit } from "octokit";
 import { AccountInfo } from "./dashboard/AccountInfo";
 import { HWIDReset } from "./dashboard/HWIDReset";
+import { SubscriptionStatus } from "./dashboard/SubscriptionStatus";
 
 interface User {
   username: string;
@@ -114,14 +115,15 @@ export const Dashboard = () => {
 
   return (
     <div className="container py-6 md:py-10 fade-in">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid gap-6">
         <AccountInfo user={user} />
+        <SubscriptionStatus user={user} />
+        <HWIDReset 
+          hwidResets={user.hwidResets || 0}
+          maxResets={MAX_RESETS}
+          onReset={handleHWIDReset}
+        />
       </div>
-      <HWIDReset 
-        hwidResets={user.hwidResets || 0}
-        maxResets={MAX_RESETS}
-        onReset={handleHWIDReset}
-      />
     </div>
   );
 };

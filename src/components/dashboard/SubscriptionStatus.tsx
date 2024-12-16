@@ -13,7 +13,6 @@ const getSubscriptionStatus = (subscription: string) => {
   const hasEssential = subs.includes('essential');
   const hasLegit = subs.includes('legit');
   
-  // Return true if subscription has all three components
   return hasSupreme && hasEssential && hasLegit;
 };
 
@@ -46,10 +45,7 @@ export const SubscriptionStatus = ({ user }: SubscriptionStatusProps) => {
           {subscriptions.map((sub, index) => (
             <div 
               key={sub.name}
-              className={`flex items-center justify-between ${
-                isFullSubscription && sub.active ? 'border-l-4 border-green-500 pl-4' : 
-                sub.active ? 'border-l-4 border-red-500 pl-4' : 'pl-5'
-              }`}
+              className="flex items-center justify-between"
             >
               <span className="text-xl text-white">{sub.name}</span>
               <div className="flex items-center gap-8">

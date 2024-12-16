@@ -37,15 +37,15 @@ export const SubscriptionStatus = ({ user }: SubscriptionStatusProps) => {
 
   return (
     <Card className="bg-[#1A1F2C] border-gray-800">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-white">Subscription Status</CardTitle>
+      <CardHeader className="bg-secondary">
+        <CardTitle className="text-center">Subscription Status</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-6">
-          {subscriptions.map((sub, index) => (
+        <div className="space-y-6 pt-6">
+          {subscriptions.map((sub) => (
             <div 
               key={sub.name}
-              className="flex items-center justify-between"
+              className="flex justify-between items-center border-l-4 border-green-500 pl-4"
             >
               <span className="text-xl text-white">{sub.name}</span>
               <div className="flex items-center gap-8">

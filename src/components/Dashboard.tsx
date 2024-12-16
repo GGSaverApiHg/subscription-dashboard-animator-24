@@ -10,7 +10,7 @@ interface User {
   password: string;
   subscription: string;
   expireDate: string;
-  hwidResets?: number;
+  hwidResets: number;
   hwid: string;
   key: string;
 }
@@ -24,14 +24,42 @@ export const Dashboard = () => {
   const REPO_NAME = "user-management";
   const FILE_PATH = "users.json";
 
+  const fetchUserData = async (username: string) => {
+    try {
+      const octokit = new Octokit({
+        auth: GITHUB_TOKEN
+      });
+
+      const { data: fileData } = await octokit.rest.repos.getContent({
+        owner: REPO_OWNER,
+        repo: REPO_NAME,
+        path: FILE_PATH,
+      });
+
+      if (Array.isArray(fileData) || !('content' in fileData)) {
+        throw new Error('Invalid response format');
+      }
+
+      const content = atob(fileData.content);
+      const users = JSON.parse(content);
+      const githubUser = users.find((u: User) => u.username === username);
+      
+      if (githubUser) {
+        // Update local storage with the latest data from GitHub
+        localStorage.setItem("user", JSON.stringify(githubUser));
+        setUser(githubUser);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
   useEffect(() => {
     const userData = localStorage.getItem("user");
     if (userData) {
       const parsedUser = JSON.parse(userData);
-      if (typeof parsedUser.hwidResets === 'undefined') {
-        parsedUser.hwidResets = 0;
-      }
-      setUser(parsedUser);
+      // Always fetch the latest data from GitHub when component mounts
+      fetchUserData(parsedUser.username);
     }
   }, []);
 
@@ -55,7 +83,9 @@ export const Dashboard = () => {
       const users = JSON.parse(content);
 
       const updatedUsers = users.map((u: User) => 
-        u.username === updatedUser.username ? { ...u, hwid: "" } : u
+        u.username === updatedUser.username 
+          ? { ...u, hwid: "", hwidResets: (u.hwidResets || 0) + 1 }
+          : u
       );
 
       await octokit.rest.repos.createOrUpdateFileContents({
@@ -77,7 +107,10 @@ export const Dashboard = () => {
   const handleHWIDReset = async () => {
     if (!user) return;
 
-    if (user.hwidResets >= MAX_RESETS) {
+    // Get the latest user data before proceeding
+    await fetchUserData(user.username);
+
+    if (!user || user.hwidResets >= MAX_RESETS) {
       toast({
         variant: "destructive",
         title: "Reset limit reached",
@@ -86,21 +119,15 @@ export const Dashboard = () => {
       return;
     }
 
-    const updatedUser = {
-      ...user,
-      hwid: "",
-      hwidResets: (user.hwidResets || 0) + 1
-    };
-
-    const githubUpdateSuccess = await updateGithubRepo(updatedUser);
+    const githubUpdateSuccess = await updateGithubRepo(user);
     
     if (githubUpdateSuccess) {
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      setUser(updatedUser);
+      // Fetch the latest data after successful update
+      await fetchUserData(user.username);
 
       toast({
         title: "HWID Reset Successful",
-        description: `HWID has been cleared (Reset count: ${updatedUser.hwidResets}/${MAX_RESETS})`,
+        description: `HWID has been cleared (Reset count: ${(user.hwidResets || 0) + 1}/${MAX_RESETS})`,
       });
     } else {
       toast({

@@ -1,7 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Logo } from "./Logo";
+import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    toast({
+      title: "Logged out successfully",
+      description: "You have been logged out of your account",
+    });
+    navigate("/");
+  };
+
   return (
     <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 max-w-screen-2xl items-center">
@@ -25,9 +38,12 @@ export const Header = () => {
           <Link to="/guides" className="text-sm font-medium transition-colors hover:text-primary">
             Guides
           </Link>
-          <Link to="/logout" className="text-sm font-medium transition-colors hover:text-primary">
+          <button
+            onClick={handleLogout}
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
             Logout
-          </Link>
+          </button>
         </nav>
       </div>
     </header>

@@ -38,7 +38,7 @@ export const SubscriptionStatus = ({ user }: SubscriptionStatusProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-center">Subscription Status</CardTitle>
+        <CardTitle className="text-center text-muted-foreground">Subscription Status</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-6 pt-6">
@@ -47,10 +47,10 @@ export const SubscriptionStatus = ({ user }: SubscriptionStatusProps) => {
               key={sub.name}
               className="flex justify-between items-center border-l-4 pl-4"
             >
-              <span className="text-xl">{sub.name}</span>
+              <span className="text-xl text-muted-foreground">{sub.name}</span>
               <div className="flex items-center gap-8">
                 <SubscriptionIndicator isActive={sub.active} />
-                <span className="text-xl">
+                <span className="text-xl text-muted-foreground">
                   {user.expireDate || "Expired date"}
                 </span>
               </div>

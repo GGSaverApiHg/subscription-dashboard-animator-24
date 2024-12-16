@@ -12,25 +12,25 @@ export const AccountInfo = ({ user }: AccountInfoProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-center">Account Info</CardTitle>
+        <CardTitle className="text-center text-muted-foreground">Account Info</CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
         <div className="space-y-4">
           <div className="flex justify-between items-center border-l-4 pl-4">
-            <span className="text-xl">Username</span>
-            <span className="text-xl">{user?.username}</span>
+            <span className="text-xl text-muted-foreground">Username</span>
+            <span className="text-xl text-muted-foreground">{user?.username}</span>
           </div>
           <div className="flex justify-between items-center border-l-4 pl-4">
-            <span className="text-xl">Password</span>
-            <span className="text-xl">********</span>
+            <span className="text-xl text-muted-foreground">Password</span>
+            <span className="text-xl text-muted-foreground">********</span>
           </div>
           <div className="flex justify-between items-center border-l-4 pl-4">
-            <span className="text-xl">Status</span>
+            <span className="text-xl text-muted-foreground">Status</span>
             <Badge>Active</Badge>
           </div>
           <div className="flex justify-between items-center border-l-4 pl-4">
-            <span className="text-xl">Current HWID</span>
-            <span className="font-mono text-xl truncate max-w-[200px]">{user?.hwid || "Not Set"}</span>
+            <span className="text-xl text-muted-foreground">Current HWID</span>
+            <span className="font-mono text-xl text-muted-foreground truncate max-w-[200px]">{user?.hwid || "Not Set"}</span>
           </div>
         </div>
       </CardContent>

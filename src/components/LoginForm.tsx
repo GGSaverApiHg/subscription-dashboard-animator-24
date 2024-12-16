@@ -9,11 +9,19 @@ export const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const GITHUB_TOKEN = "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";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://api.github.com/repos/GGSaverApiHg/user-management/contents/users.json");
+      const response = await fetch(
+        "https://api.github.com/repos/GGSaverApiHg/user-management/contents/users.json",
+        {
+          headers: {
+            Authorization: `Bearer ${GITHUB_TOKEN}`,
+          },
+        }
+      );
       const data = await response.json();
       const users = JSON.parse(atob(data.content));
       

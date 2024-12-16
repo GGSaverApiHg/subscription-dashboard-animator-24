@@ -10,27 +10,27 @@ interface AccountInfoProps {
 
 export const AccountInfo = ({ user }: AccountInfoProps) => {
   return (
-    <Card>
+    <Card className="bg-[#1A1F2C] border-gray-800">
       <CardHeader>
-        <CardTitle>Account Info</CardTitle>
+        <CardTitle className="text-2xl font-bold text-white">Account Info</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Username</span>
-            <span>{user?.username}</span>
+            <span className="text-xl text-white">Username</span>
+            <span className="text-xl text-white">{user?.username}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Password</span>
-            <span>********</span>
+            <span className="text-xl text-white">Password</span>
+            <span className="text-xl text-white">********</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Status</span>
+            <span className="text-xl text-white">Status</span>
             <Badge className="bg-blue-500 hover:bg-blue-600">Active</Badge>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Current HWID</span>
-            <span className="font-mono text-sm truncate max-w-[200px]">{user?.hwid || "Not Set"}</span>
+            <span className="text-xl text-white">Current HWID</span>
+            <span className="font-mono text-xl text-white truncate max-w-[200px]">{user?.hwid || "Not Set"}</span>
           </div>
         </div>
       </CardContent>

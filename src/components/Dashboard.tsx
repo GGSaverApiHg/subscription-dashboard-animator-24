@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { RotateCw, Shield } from "lucide-react";
+import { RotateCw, Shield, AlertTriangle } from "lucide-react";
 import { Octokit } from "octokit";
 
 interface User {
@@ -121,52 +121,84 @@ export const Dashboard = () => {
   if (!user) return null;
 
   return (
-    <div className="container py-10 fade-in">
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Account Info</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Username</span>
-              <span>{user?.username}</span>
+    <div className="container py-6 md:py-10 fade-in">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Account Info Card */}
+        <Card className="mb-6 lg:mb-0">
+          <CardHeader>
+            <CardTitle>Account Info</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Username</span>
+                <span>{user?.username}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Password</span>
+                <span>********</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Status</span>
+                <Badge variant="default">Active</Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Current HWID</span>
+                <span className="font-mono text-sm truncate max-w-[200px]">{user?.hwid || "Not Set"}</span>
+              </div>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Password</span>
-              <span>********</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Status</span>
-              <Badge variant="default">Active</Badge>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Current HWID</span>
-              <span className="font-mono">{user?.hwid || "Not Set"}</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Subscription Status</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span>Package</span>
-              <span>{user?.subscription}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span>Expiration Date</span>
-              <span>{user?.expireDate}</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        {/* Instructions Card */}
+        <Card>
+          <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
+            <CardTitle className="text-blue-700 dark:text-blue-300">Instructions For Matrix Supreme / External</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="space-y-6">
+              <div>
+                <h3 className="font-semibold mb-3">Step 1: Connect Your Discord Account</h3>
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <p>After purchasing our panel, the first thing you need to do is:</p>
+                  <ol className="list-decimal list-inside space-y-2 ml-4">
+                    <li>Visit our website dashboard and log in to your account.</li>
+                    <li>Connect your Discord account by following the on-screen instructions.</li>
+                    <li>Once connected, you will automatically receive all the roles related to your product.</li>
+                    <li>If you don't receive the roles, click the <span className="font-semibold">Update Roles</span> button.</li>
+                    <li>After getting your roles, check out the recent messages in the client notice section to stay updated.</li>
+                    <li>If you have any questions, you can create a support ticket or ask in the client chat.</li>
+                  </ol>
+                </div>
+              </div>
 
-      <Card>
+              <div>
+                <h3 className="font-semibold mb-3">Step 2: Download the Panel</h3>
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <p>You can download the panel from the Downloads section of our website.</p>
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-md mt-2">
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+                      <div>
+                        <p>Make sure to disable Windows Defender's real-time protection or any other antivirus software before downloading.</p>
+                        <p className="mt-2">All antivirus software might detect the panel as a virus because it modifies the emulator, so this step is crucial.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-3">Step 3: Install the Recommended Emulator</h3>
+                <p className="text-sm text-muted-foreground">Follow the installation guide provided in our Discord server.</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* HWID Reset Card */}
+      <Card className="mt-6">
         <CardHeader className="bg-secondary">
           <CardTitle className="text-center">Reset Device ID</CardTitle>
         </CardHeader>

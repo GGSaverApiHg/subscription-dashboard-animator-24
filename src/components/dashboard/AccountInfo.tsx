@@ -5,6 +5,8 @@ interface AccountInfoProps {
   user: {
     username: string;
     hwid: string;
+    subscription: string;
+    expireDate: string;
   };
 }
 
@@ -23,6 +25,14 @@ export const AccountInfo = ({ user }: AccountInfoProps) => {
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Password</span>
             <span>********</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Subscription</span>
+            <Badge variant="secondary">{user?.subscription || "None"}</Badge>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Expire Date</span>
+            <span>{user?.expireDate || "N/A"}</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Status</span>
